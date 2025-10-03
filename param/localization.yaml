@@ -4,14 +4,14 @@
       score_threshold: 4.0 #1.0
       ndt_resolution: 2.0
       ndt_step_size: 0.2 #0.1
-      ndt_num_threads: 1 #0
+      ndt_num_threads: 4 #0
       transform_epsilon: 0.02 #0.01
       voxel_leaf_size: 0.4 #0.2
       scan_max_range: 40.0
       scan_min_range: 1.0
       scan_period: 0.15 #0.1
       use_pcd_map: true
-      map_path: "/home/ubuntu/ros2_ws/src/tuk-tuk/tuk-tuk_navigation/maps/check_area_downsample.pcd"
+      map_path: "/home/ubuntu/ros2_ws/src/tuk-tuk/tuk-tuk_navigation/maps/check_area_downsample2.pcd"
       set_initial_pose: true
       initial_pose_x: 0.0
       initial_pose_y: 0.0

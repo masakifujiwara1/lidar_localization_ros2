@@ -24,15 +24,15 @@ def generate_launch_description():
         name='lidar_tf',
         package='tf2_ros',
         executable='static_transform_publisher',
-        arguments=['0','0','0','0','0','0','1','base_link','velodyne']
+        arguments=['0','0','0','0','0','0','1.0','base_link','livox_frame']
         )
 
-    imu_tf = launch_ros.actions.Node(
-        name='imu_tf',
-        package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments=['0','0','0','0','0','0','1','base_link','imu_link']
-        )
+    # imu_tf = launch_ros.actions.Node(
+    #     name='imu_tf',
+    #     package='tf2_ros',
+    #     executable='static_transform_publisher',
+    #     arguments=['0','0','0.4','0','0.2588','0','0.9659','base_link','livox_frame']
+    #     )
 
     localization_param_dir = launch.substitutions.LaunchConfiguration(
         'localization_param_dir',
@@ -47,7 +47,7 @@ def generate_launch_description():
         package='pcl_localization_ros2',
         executable='pcl_localization_node',
         parameters=[localization_param_dir],
-        remappings=[('/cloud','/velodyne_points')],
+        remappings=[('/velodyne_points','/livox/lidar'), ('/odom','/botwheel_explorer/odom'), ('/imu','/livox/imu')],
         output='screen')
 
     to_inactive = launch.actions.EmitEvent(

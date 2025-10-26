@@ -320,7 +320,11 @@ void PCLLocalization::initialPoseReceived(const geometry_msgs::msg::PoseWithCova
   corrent_pose_with_cov_stamped_ptr_ = msg;
   pose_pub_->publish(*corrent_pose_with_cov_stamped_ptr_);
 
-  cloudReceived(last_scan_ptr_);
+  if (last_scan_ptr_) {
+    cloudReceived(last_scan_ptr_);
+  } else {
+    RCLCPP_WARN(get_logger(), "No cloud received yet; waiting for /cloud.");
+  }
   RCLCPP_INFO(get_logger(), "initialPoseReceived end");
 }
 
@@ -352,7 +356,8 @@ void PCLLocalization::mapReceived(const sensor_msgs::msg::PointCloud2::SharedPtr
 
 void PCLLocalization::odomReceived(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
 {
-  if (!use_odom_) {return;}
+  // if (!use_odom_) {return;}
+  if (!use_odom_ || !initialpose_recieved_) { return; }
   RCLCPP_INFO(get_logger(), "odomReceived");
 
   double current_odom_received_time = msg->header.stamp.sec +
@@ -444,6 +449,10 @@ void PCLLocalization::imuReceived(const sensor_msgs::msg::Imu::ConstSharedPtr ms
 
 void PCLLocalization::cloudReceived(const sensor_msgs::msg::PointCloud2::ConstSharedPtr msg)
 {
+  if (!msg) {
+    RCLCPP_WARN(get_logger(), "Null cloud message; ignoring.");
+    return;
+  }
   if (!map_recieved_ || !initialpose_recieved_) {return;}
   RCLCPP_INFO(get_logger(), "cloudReceived");
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_ptr(new pcl::PointCloud<pcl::PointXYZI>);
